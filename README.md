@@ -13,7 +13,7 @@ A simple Question & Answer platform inspired by Stack Overflow. Built using Java
 - **Attachments**: Users can attach files to their posts
 - **Instant Database Updates**: Every user action (creating posts, commenting, liking, etc.) is immediately saved to the MySQL database, ensuring real-time data persistence
 
-![demo](https://github.com/user-attachments/assets/316896e6-ad11-436c-8d5d-b59d4e06f6f3)
+![demo](https://github.com/user-attachments/assets/67dbe30d-5b84-434e-8688-a560ec8dbb76)
 
 ## Technologies
 
