@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #0066cc, #003366);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #004d99;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .post h3 {
+            color: #0066cc;
+        }
+
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #004d99;
+        }
+
+        .footer {
+            margin-top: auto;
+            width: 100%;
+            background-color: #004d99;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .create-post-btn {
+            background: #28a745;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            border: none;
+        }
+
+        .create-post-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome, <span th:text="${#authentication.name}">User</span></h1>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="content">
+        <h2>All Posts</h2>
+        <div th:each="post : ${posts}" class="post">
+            <h3 th:text="${post.title}">Post Title</h3>
+            <p th:text="${post.content}">Post Content</p>
+            <p><strong>Category:</strong> <span th:text="${post.category != null ? post.category.name : 'No Category'}"></span></p>
+            <p><strong>Tags:</strong> 
+                <span th:each="tag : ${post.tags}" th:text="${tag.name}">No tags</span>
+            </p>
+            <p><strong>Posted by:</strong> <span th:text="${post.user != null ? post.user.username : 'Unknown User'}">Username</span></p>
+
+            <!-- Like Sayacı -->
+            <p><strong>Likes:</strong> <span id="like-count-${post.id}" th:text="${post.likeCount}">0</span></p>
+
+            <!-- Like Butonu -->
+            <button class="like-button" th:data-post-id="${post.id}">Like</button>
+
+			<!-- Yorum Sayısı -->
+			<p><strong>Comments:</strong> <span th:text="${post.comments.size()}">0</span></p>
+
+			           <!-- Yorum Ekleme Formu -->
+			<form th:action="@{/posts/comment/{postId}(postId=${post.id})}" method="post">
+			        <textarea name="content" placeholder="Write a comment..."></textarea>
+			        <button type="submit">Add Comment</button>
+			</form>
+        </div>
+        <a href="/posts/createpost" class="create-post-btn">Create a Post</a>
+    </div>
+    <div class="footer">
+        <p>© 2024 Your Application. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Like butonuna tıklama olayını dinleyin
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                const postId = event.target.getAttribute('data-post-id');
+                
+                // AJAX isteği gönder
+                fetch(`/api/likes/like/${postId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Like sayısını güncelle
+                    const likeCountElement = document.getElementById(`like-count-${postId}`);
+                    likeCountElement.innerText = data.newLikeCount;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</body>
+</html>
