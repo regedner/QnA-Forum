@@ -14,6 +14,8 @@ A simple Question & Answer platform inspired by Stack Overflow. Built using Java
 - **Instant Database Updates**: Every user action (creating posts, commenting, liking, etc.) is immediately saved to the MySQL database, ensuring real-time data persistence
 
 ![demo](https://github.com/user-attachments/assets/67dbe30d-5b84-434e-8688-a560ec8dbb76)
+<img width="696" height="157" alt="image" src="https://github.com/user-attachments/assets/9debda79-1567-45f8-80f8-6d42fdb09c35" />
+
 
 ## Technologies
 
